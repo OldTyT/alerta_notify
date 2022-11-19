@@ -1,0 +1,6 @@
+{
+    "alerta_username": "alerta_username",
+    "alerta_password": "alerta_password",
+    "alerta_url": "https://alerta.io",
+    "time_sleep": 30
+}
