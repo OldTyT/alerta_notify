@@ -2,5 +2,7 @@
     "alerta_username": "alerta_username",
     "alerta_password": "alerta_password",
     "alerta_url": "https://alerta.io",
-    "time_sleep": 30
+    "alert_query": "/alerts?sort-by=lastReceiveTime&status=open",
+    "time_sleep": 30,
+    "path_to_icon": "path/to/icon.png"
 }

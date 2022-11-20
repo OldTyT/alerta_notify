@@ -37,3 +37,4 @@ jobs:
         goos: ${{ matrix.goos }}
         goarch: ${{ matrix.goarch }}
         binary_name: "${{ env.BINARY_NAME }}"
+        extra_files: LICENSE.md README.md
