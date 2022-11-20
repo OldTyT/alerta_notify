@@ -42,7 +42,7 @@ func main() {
 
 func ViewSummary() {
 	URL := vars.Notifier.AlertaURL + vars.Notifier.AlertaQuery
-	notify.Notify("Alerta notify", "Alerta notify summary", "Alerta query: "+URL+"\nSleep time: "+strconv.Itoa(vars.Notifier.TimeSleep)+"sec", vars.Notifier.PathIcon)
+	notify.Notify("Alerta notify", "Alerta notify summary", "Alerta query: "+URL+"\nSleep time: "+strconv.Itoa(vars.Notifier.TimeSleep)+"sec"+"\nVersion: "+vars.Version, vars.Notifier.PathIcon)
 }
 
 func ErrorExiting(ErrorMsg string) {
