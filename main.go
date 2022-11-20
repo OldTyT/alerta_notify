@@ -78,6 +78,9 @@ func LoginAlerta() {
 		ErrorExiting("Response status != 200, when authorization in alerta.\nExit.")
 	}
 	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		ErrorExiting("Can't read JSON: " + err.Error())
+	}
 	if err := json.Unmarshal(body, &TokenLocal); err != nil {
 		ErrorExiting("Can't unmarshal JSON: " + err.Error())
 	}
@@ -101,7 +104,7 @@ func UpdateAlerts() {
 		Alert         []AlertSummary
 	)
 	URL := vars.Notifier.AlertaURL + vars.Notifier.AlertaQuery
-	for true {
+	for {
 		client := &http.Client{}
 		req, err := http.NewRequest("GET", URL, nil)
 		if err != nil {
@@ -115,8 +118,11 @@ func UpdateAlerts() {
 		if resp.StatusCode != 200 {
 			go notify.Alert("Alerta notify", "Alerta Notify", "Response status != 200, when update alerts.", vars.Notifier.PathIcon)
 		} else {
-			defer resp.Body.Close()
+			// defer resp.Body.Close()
 			body, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				go notify.Alert("Alerta notify", "Alerta Notify", "Can't read JSON, when update alerts. "+err.Error(), vars.Notifier.PathIcon)
+			}
 			if err = json.Unmarshal(body, &AlertsSummary); err != nil {
 				go notify.Alert("Alerta notify", "Alerta Notify", "Can't unmarshal JSON, when update alerts. "+err.Error(), vars.Notifier.PathIcon)
 			}
