@@ -41,8 +41,8 @@ func main() {
 		notify.Alert("Alerta notify", "Alerta Notify", ErrorMsg, "None")
 		os.Exit(1)
 	}
-	LoginAlerta()
 	go ViewSummary()
+	LoginAlerta()
 	UpdateAlerts()
 }
 
