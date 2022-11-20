@@ -24,15 +24,21 @@ func main() {
 	flag.Parse()
 	file, err := os.Open(*ConfFile)
 	if err != nil {
-		fmt.Println(err)
-		fmt.Println("Error open conf file -", *ConfFile)
+		ErrorMsg := err.Error()
+		fmt.Println(ErrorMsg)
+		notify.Alert("Alerta notify", "Alerta Notify", ErrorMsg, "None")
+		ErrorMsg = "Error open conf file -" + *ConfFile
+		fmt.Println(ErrorMsg)
+		notify.Alert("Alerta notify", "Alerta Notify", ErrorMsg, "None")
 		os.Exit(1)
 	}
 	defer file.Close()
 	decoder := json.NewDecoder(file)
 	err = decoder.Decode(&vars.Notifier)
 	if err != nil {
-		fmt.Println("error:", err)
+		ErrorMsg := "error:" + err.Error()
+		fmt.Println(ErrorMsg)
+		notify.Alert("Alerta notify", "Alerta Notify", ErrorMsg, "None")
 		os.Exit(1)
 	}
 	LoginAlerta()
