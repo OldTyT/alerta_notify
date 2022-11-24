@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/OldTyT/alerta_notify/internal/vars"
-	"github.com/martinlindhe/notify"
+	"github.com/OldTyT/notify"
 )
 
 func main() {
@@ -26,10 +26,10 @@ func main() {
 	if err != nil {
 		ErrorMsg := err.Error()
 		fmt.Println(ErrorMsg)
-		notify.Alert("Alerta notify", "Alerta Notify", ErrorMsg, "None")
+		notify.Alert("Alerta notify", "Alerta Notify", ErrorMsg, "None", "default")
 		ErrorMsg = "Error open conf file -" + *ConfFile
 		fmt.Println(ErrorMsg)
-		notify.Alert("Alerta notify", "Alerta Notify", ErrorMsg, "None")
+		notify.Alert("Alerta notify", "Alerta Notify", ErrorMsg, "None", "default")
 		os.Exit(1)
 	}
 	defer file.Close()
@@ -38,7 +38,7 @@ func main() {
 	if err != nil {
 		ErrorMsg := "error:" + err.Error()
 		fmt.Println(ErrorMsg)
-		notify.Alert("Alerta notify", "Alerta Notify", ErrorMsg, "None")
+		notify.Alert("Alerta notify", "Alerta Notify", ErrorMsg, "None", "default")
 		os.Exit(1)
 	}
 	go ViewSummary()
@@ -51,11 +51,11 @@ func main() {
 
 func ViewSummary() {
 	URL := vars.Notifier.AlertaURL + vars.Notifier.AlertaQuery
-	notify.Notify("Alerta notify", "Alerta notify summary", "Alerta query: "+URL+"\nSleep time: "+strconv.Itoa(vars.Notifier.TimeSleep)+"sec"+"\nVersion: "+vars.Version, vars.Notifier.PathIcon)
+	SendNotify("Alerta query: " + URL + "\nSleep time: " + strconv.Itoa(vars.Notifier.TimeSleep) + "sec" + "\nVersion: " + vars.Version)
 }
 
 func ErrorExiting(ErrorMsg string) {
-	notify.Alert("Alerta notify", "Alerta Notify", ErrorMsg, vars.Notifier.PathIcon)
+	notify.Alert("Alerta notify", "Alerta Notify", ErrorMsg, vars.Notifier.PathIcon, vars.Notifier.SoundAlert)
 	os.Exit(1)
 }
 
@@ -94,7 +94,15 @@ func LoginAlerta() {
 		ErrorExiting("Can't unmarshal JSON: " + err.Error())
 	}
 	vars.Other.AlertaToken = TokenLocal.Token
-	go notify.Notify("Alerta notify", "Alerta Notify", "Successful authorization in Alerta", vars.Notifier.PathIcon)
+	SendNotify("Successful authorization in Alerta")
+}
+
+func SendNotify(text string) {
+	go notify.Notify("Alerta notify", "Alerta Notify", text, vars.Notifier.PathIcon, vars.Notifier.SoundNotify)
+}
+
+func SendAlert(text string) {
+	go notify.Alert("Alerta notify", "Alerta Notify", text, vars.Notifier.PathIcon, vars.Notifier.SoundAlert)
 }
 
 func UpdateAlerts() {
@@ -116,34 +124,34 @@ func UpdateAlerts() {
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", URL, nil)
 	if err != nil {
-		go notify.Notify("Alerta notify", "Alerta Notify", "Error when receiving alerts.", vars.Notifier.PathIcon)
+		SendNotify("Error when receiving alerts.")
 	}
 	req.Header.Set("Authorization", "Bearer "+vars.Other.AlertaToken)
 	resp, err := client.Do(req)
 	if err != nil {
-		go notify.Notify("Alerta notify", "Alerta Notify", "Error when receiving alerts.", vars.Notifier.PathIcon)
+		SendNotify("Error when receiving alerts.")
 	}
 	if resp.StatusCode != 200 {
-		go notify.Alert("Alerta notify", "Alerta Notify", "Response status != 200, when update alerts.", vars.Notifier.PathIcon)
+		SendAlert("Response status != 200, when update alerts.")
 	} else {
-		// defer resp.Body.Close()
 		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			go notify.Alert("Alerta notify", "Alerta Notify", "Can't read JSON, when update alerts. "+err.Error(), vars.Notifier.PathIcon)
+			SendAlert("Can't read JSON, when update alerts. " + err.Error())
 		}
 		if err = json.Unmarshal(body, &AlertsSummary); err != nil {
-			go notify.Alert("Alerta notify", "Alerta Notify", "Can't unmarshal JSON, when update alerts. "+err.Error(), vars.Notifier.PathIcon)
+			SendAlert("Can't unmarshal JSON, when update alerts. " + err.Error())
 		}
 		if AlertsSummary.Total != 0 {
 			b, err := json.Marshal(AlertsSummary.Alerts)
 			if err != nil {
-				go notify.Alert("Alerta notify", "Alerta Notify", "Can't marshal JSON. "+err.Error(), vars.Notifier.PathIcon)
+				SendAlert("Can't marshal JSON. " + err.Error())
 			}
 			if err = json.Unmarshal(b, &Alert); err != nil {
-				go notify.Alert("Alerta notify", "Alerta Notify", "Can't unmarshal JSON. "+err.Error(), vars.Notifier.PathIcon)
+				SendAlert("Can't unmarshal JSON. " + err.Error())
 			}
 			for key := range Alert {
-				go notify.Alert("Alerta notify", Alert[key].ENV+"/"+Alert[key].Severity, Alert[key].AlertName+"\n"+Alert[key].Resource, vars.Notifier.PathIcon)
+				SendAlert("Can't unmarshal JSON. " + err.Error())
+				go notify.Alert("Alerta notify", Alert[key].ENV+"/"+Alert[key].Severity, Alert[key].AlertName+"\n"+Alert[key].Resource, vars.Notifier.PathIcon, vars.Notifier.SoundAlert)
 			}
 		}
 	}

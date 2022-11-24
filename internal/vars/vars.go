@@ -7,6 +7,8 @@ type NotifierCFG struct {
 	AlertaQuery    string `json:"alert_query"`
 	TimeSleep      int    `json:"time_sleep"`
 	PathIcon       string `json:"path_to_icon"`
+	SoundNotify    string `json:"path_to_sound_notify"`
+	SoundAlert     string `json:"path_to_sound_alert"`
 }
 
 type OtherCFG struct {
