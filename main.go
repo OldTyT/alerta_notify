@@ -55,7 +55,7 @@ func ViewSummary() {
 }
 
 func ErrorExiting(ErrorMsg string) {
-	notify.Alert("Alerta notify", "Alerta Notify", ErrorMsg, vars.Notifier.Path.Icon, vars.Notifier.Path.SoundAlert)
+	notify.Alert("Alerta notify", "Alerta Notify", ErrorMsg, vars.Notifier.Path.IconAlert, vars.Notifier.Path.SoundAlert)
 	os.Exit(1)
 }
 
@@ -98,11 +98,11 @@ func LoginAlerta() {
 }
 
 func SendNotify(text string) {
-	go notify.Notify("Alerta notify", "Alerta Notify", text, vars.Notifier.Path.Icon, vars.Notifier.Path.SoundNotify)
+	go notify.Notify("Alerta notify", "Alerta Notify", text, vars.Notifier.Path.IconNotify, vars.Notifier.Path.SoundNotify)
 }
 
 func SendAlert(text string) {
-	go notify.Alert("Alerta notify", "Alerta Notify", text, vars.Notifier.Path.Icon, vars.Notifier.Path.SoundAlert)
+	go notify.Alert("Alerta notify", "Alerta Notify", text, vars.Notifier.Path.IconAlert, vars.Notifier.Path.SoundAlert)
 }
 
 func UpdateAlerts() {
@@ -151,7 +151,7 @@ func UpdateAlerts() {
 			}
 			for key := range Alert {
 				SendAlert("Can't unmarshal JSON. " + err.Error())
-				go notify.Alert("Alerta notify", Alert[key].ENV+"/"+Alert[key].Severity, Alert[key].AlertName+"\n"+Alert[key].Resource, vars.Notifier.Path.Icon, vars.Notifier.Path.SoundAlert)
+				go notify.Alert("Alerta notify", Alert[key].ENV+"/"+Alert[key].Severity, Alert[key].AlertName+"\n"+Alert[key].Resource, vars.Notifier.Path.IconAlert, vars.Notifier.Path.SoundAlert)
 			}
 		}
 	}

@@ -7,7 +7,8 @@ type NotifierCFG struct {
 }
 
 type PathStruct struct {
-	Icon        string `json:"icon"`
+	IconNotify  string `json:"icon_notify"`
+	IconAlert   string `json:"icon_alert"`
 	SoundNotify string `json:"sound_notify"`
 	SoundAlert  string `json:"sound_alert"`
 }
@@ -26,5 +27,5 @@ type OtherCFG struct {
 var (
 	Notifier NotifierCFG
 	Other    OtherCFG
-	Version  string = "v0.0.5"
+	Version  string = "v0.0.6"
 )

@@ -6,7 +6,8 @@
         "query": "/alerts?sort-by=lastReceiveTime&status=open&status=unknown"
     },
     "path": {
-        "icon": "path/to/icon.png",
+        "icon_notify": "path/to/icon.png",
+        "icon_alert": "path/to/icon.png",
         "sound_notify": "/usr/share/sounds/freedesktop/stereo/bell.oga",
         "sound_alert": "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga"
     },
