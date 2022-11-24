@@ -3,7 +3,7 @@
         "username": "alerta_username",
         "password": "alerta_password",
         "url": "https://alerta.io",
-        "query": "/alerts?sort-by=lastReceiveTime&status=open"
+        "query": "/alerts?sort-by=lastReceiveTime&status=open&status=unknown"
     },
     "path": {
         "icon": "path/to/icon.png",
