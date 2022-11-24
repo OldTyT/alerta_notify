@@ -1,14 +1,22 @@
 package vars
 
 type NotifierCFG struct {
-	AlertaUsername string `json:"alerta_username"`
-	AlertaPassword string `json:"alerta_password"`
-	AlertaURL      string `json:"alerta_url"`
-	AlertaQuery    string `json:"alert_query"`
-	TimeSleep      int    `json:"time_sleep"`
-	PathIcon       string `json:"path_to_icon"`
-	SoundNotify    string `json:"path_to_sound_notify"`
-	SoundAlert     string `json:"path_to_sound_alert"`
+	Alerta    AlertaStuct `json:"alerta"`
+	Path      PathStruct  `json:"path"`
+	TimeSleep int         `json:"time_sleep"`
+}
+
+type PathStruct struct {
+	Icon        string `json:"icon"`
+	SoundNotify string `json:"sound_notify"`
+	SoundAlert  string `json:"sound_alert"`
+}
+
+type AlertaStuct struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+	URL      string `json:"url"`
+	Query    string `json:"query"`
 }
 
 type OtherCFG struct {
@@ -18,5 +26,5 @@ type OtherCFG struct {
 var (
 	Notifier NotifierCFG
 	Other    OtherCFG
-	Version  string = "v0.0.4"
+	Version  string = "v0.0.5"
 )

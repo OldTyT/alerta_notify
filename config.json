@@ -1,10 +1,14 @@
 {
-    "alerta_username": "alerta_username",
-    "alerta_password": "alerta_password",
-    "alerta_url": "https://alerta.io",
-    "alert_query": "/alerts?sort-by=lastReceiveTime&status=open",
-    "time_sleep": 30,
-    "path_to_icon": "path/to/icon.png",
-    "path_to_sound_notify": "/usr/share/sounds/freedesktop/stereo/bell.oga",
-    "path_to_sound_alert": "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga"
+    "alerta": {
+        "username": "alerta_username",
+        "password": "alerta_password",
+        "url": "https://alerta.io",
+        "query": "/alerts?sort-by=lastReceiveTime&status=open"
+    },
+    "path": {
+        "icon": "path/to/icon.png",
+        "sound_notify": "/usr/share/sounds/freedesktop/stereo/bell.oga",
+        "sound_alert": "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga"
+    },
+    "time_sleep": 30
 }

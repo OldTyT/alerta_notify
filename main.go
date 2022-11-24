@@ -50,12 +50,12 @@ func main() {
 }
 
 func ViewSummary() {
-	URL := vars.Notifier.AlertaURL + vars.Notifier.AlertaQuery
+	URL := vars.Notifier.Alerta.URL + vars.Notifier.Alerta.Query
 	SendNotify("Alerta query: " + URL + "\nSleep time: " + strconv.Itoa(vars.Notifier.TimeSleep) + "sec" + "\nVersion: " + vars.Version)
 }
 
 func ErrorExiting(ErrorMsg string) {
-	notify.Alert("Alerta notify", "Alerta Notify", ErrorMsg, vars.Notifier.PathIcon, vars.Notifier.SoundAlert)
+	notify.Alert("Alerta notify", "Alerta Notify", ErrorMsg, vars.Notifier.Path.Icon, vars.Notifier.Path.SoundAlert)
 	os.Exit(1)
 }
 
@@ -71,13 +71,13 @@ func LoginAlerta() {
 		AlertaAuthData AlertaAuth
 		TokenLocal     AlertaToken
 	)
-	AlertaAuthData.Password = vars.Notifier.AlertaPassword
-	AlertaAuthData.UserName = vars.Notifier.AlertaUsername
+	AlertaAuthData.Password = vars.Notifier.Alerta.Password
+	AlertaAuthData.UserName = vars.Notifier.Alerta.Username
 	JsonData, err := json.Marshal(AlertaAuthData)
 	if err != nil {
 		fmt.Println(err)
 	}
-	URL := vars.Notifier.AlertaURL + "/auth/login"
+	URL := vars.Notifier.Alerta.URL + "/auth/login"
 	resp, err := http.Post(URL, "application/json", bytes.NewBuffer(JsonData))
 	if err != nil {
 		ErrorExiting("Error auth in alerta. " + err.Error())
@@ -98,11 +98,11 @@ func LoginAlerta() {
 }
 
 func SendNotify(text string) {
-	go notify.Notify("Alerta notify", "Alerta Notify", text, vars.Notifier.PathIcon, vars.Notifier.SoundNotify)
+	go notify.Notify("Alerta notify", "Alerta Notify", text, vars.Notifier.Path.Icon, vars.Notifier.Path.SoundNotify)
 }
 
 func SendAlert(text string) {
-	go notify.Alert("Alerta notify", "Alerta Notify", text, vars.Notifier.PathIcon, vars.Notifier.SoundAlert)
+	go notify.Alert("Alerta notify", "Alerta Notify", text, vars.Notifier.Path.Icon, vars.Notifier.Path.SoundAlert)
 }
 
 func UpdateAlerts() {
@@ -120,7 +120,7 @@ func UpdateAlerts() {
 		AlertsSummary AlertaAlertList
 		Alert         []AlertSummary
 	)
-	URL := vars.Notifier.AlertaURL + vars.Notifier.AlertaQuery
+	URL := vars.Notifier.Alerta.URL + vars.Notifier.Alerta.Query
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", URL, nil)
 	if err != nil {
@@ -151,7 +151,7 @@ func UpdateAlerts() {
 			}
 			for key := range Alert {
 				SendAlert("Can't unmarshal JSON. " + err.Error())
-				go notify.Alert("Alerta notify", Alert[key].ENV+"/"+Alert[key].Severity, Alert[key].AlertName+"\n"+Alert[key].Resource, vars.Notifier.PathIcon, vars.Notifier.SoundAlert)
+				go notify.Alert("Alerta notify", Alert[key].ENV+"/"+Alert[key].Severity, Alert[key].AlertName+"\n"+Alert[key].Resource, vars.Notifier.Path.Icon, vars.Notifier.Path.SoundAlert)
 			}
 		}
 	}
