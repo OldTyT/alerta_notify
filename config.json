@@ -6,10 +6,14 @@
         "query": "/alerts?sort-by=lastReceiveTime&status=open&status=unknown"
     },
     "path": {
-        "icon_notify": "path/to/icon.png",
-        "icon_alert": "path/to/icon.png",
-        "sound_notify": "/usr/share/sounds/freedesktop/stereo/bell.oga",
-        "sound_alert": "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga"
+        "icon": {
+            "notify": "/usr/share/doc/HTML/en/kcontrol/windowspecific/Face-smile.png",
+            "alert": "/usr/share/doc/HTML/en/khangman/application-exit.png"
+        },
+        "sound": {
+            "notify": "/usr/share/sounds/freedesktop/stereo/bell.oga",
+            "alert": "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga"
+        }
     },
     "time_sleep": 30
 }

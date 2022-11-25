@@ -7,10 +7,13 @@ type NotifierCFG struct {
 }
 
 type PathStruct struct {
-	IconNotify  string `json:"icon_notify"`
-	IconAlert   string `json:"icon_alert"`
-	SoundNotify string `json:"sound_notify"`
-	SoundAlert  string `json:"sound_alert"`
+	Icon  NotifyAlert `json:"icon"`
+	Sound NotifyAlert `json:"sound"`
+}
+
+type NotifyAlert struct {
+	Notify string `json:"notify"`
+	Alert  string `json:"alert"`
 }
 
 type AlertaStuct struct {
