@@ -150,7 +150,6 @@ func UpdateAlerts() {
 				SendAlert("Can't unmarshal JSON. " + err.Error())
 			}
 			for key := range Alert {
-				SendAlert("Can't unmarshal JSON. " + err.Error())
 				go notify.Alert("Alerta notify", Alert[key].ENV+"/"+Alert[key].Severity, Alert[key].AlertName+"\n"+Alert[key].Resource, vars.Notifier.Path.IconAlert, vars.Notifier.Path.SoundAlert)
 			}
 		}
