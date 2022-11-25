@@ -8,9 +8,9 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-	"strconv"
 	"time"
 
+	"github.com/OldTyT/alerta_notify/internal/utils"
 	"github.com/OldTyT/alerta_notify/internal/vars"
 	"github.com/OldTyT/notify"
 )
@@ -41,22 +41,12 @@ func main() {
 		notify.Alert("Alerta notify", "Alerta Notify", ErrorMsg, "None", "default")
 		os.Exit(1)
 	}
-	go ViewSummary()
+	go utils.ViewSummary()
 	LoginAlerta()
 	for {
 		go UpdateAlerts()
 		time.Sleep(time.Duration(vars.Notifier.TimeSleep) * time.Second)
 	}
-}
-
-func ViewSummary() {
-	URL := vars.Notifier.Alerta.URL + vars.Notifier.Alerta.Query
-	SendNotify("Alerta query: " + URL + "\nSleep time: " + strconv.Itoa(vars.Notifier.TimeSleep) + "sec" + "\nVersion: " + vars.Version)
-}
-
-func ErrorExiting(ErrorMsg string) {
-	notify.Alert("Alerta notify", "Alerta Notify", ErrorMsg, vars.Notifier.Path.Icon.Alert, vars.Notifier.Path.Sound.Alert)
-	os.Exit(1)
 }
 
 func LoginAlerta() {
@@ -80,29 +70,21 @@ func LoginAlerta() {
 	URL := vars.Notifier.Alerta.URL + "/auth/login"
 	resp, err := http.Post(URL, "application/json", bytes.NewBuffer(JsonData))
 	if err != nil {
-		ErrorExiting("Error auth in alerta. " + err.Error())
+		utils.ErrorExiting("Error auth in alerta. " + err.Error())
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != 200 {
-		ErrorExiting("Response status != 200, when authorization in alerta.\nExit.")
+		utils.ErrorExiting("Response status != 200, when authorization in alerta.\nExit.")
 	}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		ErrorExiting("Can't read JSON: " + err.Error())
+		utils.ErrorExiting("Can't read JSON: " + err.Error())
 	}
 	if err := json.Unmarshal(body, &TokenLocal); err != nil {
-		ErrorExiting("Can't unmarshal JSON: " + err.Error())
+		utils.ErrorExiting("Can't unmarshal JSON: " + err.Error())
 	}
 	vars.Other.AlertaToken = TokenLocal.Token
-	SendNotify("Successful authorization in Alerta")
-}
-
-func SendNotify(text string) {
-	go notify.Notify("Alerta notify", "Alerta Notify", text, vars.Notifier.Path.Icon.Notify, vars.Notifier.Path.Sound.Notify)
-}
-
-func SendAlert(text string) {
-	go notify.Alert("Alerta notify", "Alerta Notify", text, vars.Notifier.Path.Icon.Alert, vars.Notifier.Path.Sound.Alert)
+	utils.SendNotify("Successful authorization in Alerta")
 }
 
 func UpdateAlerts() {
@@ -124,30 +106,30 @@ func UpdateAlerts() {
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", URL, nil)
 	if err != nil {
-		SendNotify("Error when receiving alerts.")
+		utils.SendNotify("Error when receiving alerts.")
 	}
 	req.Header.Set("Authorization", "Bearer "+vars.Other.AlertaToken)
 	resp, err := client.Do(req)
 	if err != nil {
-		SendNotify("Error when receiving alerts.")
+		utils.SendNotify("Error when receiving alerts.")
 	}
 	if resp.StatusCode != 200 {
-		SendAlert("Response status != 200, when update alerts.")
+		utils.SendAlert("Response status != 200, when update alerts.")
 	} else {
 		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			SendAlert("Can't read JSON, when update alerts. " + err.Error())
+			utils.SendAlert("Can't read JSON, when update alerts. " + err.Error())
 		}
 		if err = json.Unmarshal(body, &AlertsSummary); err != nil {
-			SendAlert("Can't unmarshal JSON, when update alerts. " + err.Error())
+			utils.SendAlert("Can't unmarshal JSON, when update alerts. " + err.Error())
 		}
 		if AlertsSummary.Total != 0 {
 			b, err := json.Marshal(AlertsSummary.Alerts)
 			if err != nil {
-				SendAlert("Can't marshal JSON. " + err.Error())
+				utils.SendAlert("Can't marshal JSON. " + err.Error())
 			}
 			if err = json.Unmarshal(b, &Alert); err != nil {
-				SendAlert("Can't unmarshal JSON. " + err.Error())
+				utils.SendAlert("Can't unmarshal JSON. " + err.Error())
 			}
 			for key := range Alert {
 				go notify.Alert("Alerta notify", Alert[key].ENV+"/"+Alert[key].Severity, Alert[key].AlertName+"\n"+Alert[key].Resource, vars.Notifier.Path.Icon.Alert, vars.Notifier.Path.Sound.Alert)
